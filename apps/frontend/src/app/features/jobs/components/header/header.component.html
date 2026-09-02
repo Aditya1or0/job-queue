@@ -1,43 +1,84 @@
 <header class="app-header">
-  <div class="header-branding">
-    <div class="logo-badge">
-      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <div class="header-left">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
       </svg>
     </div>
-    <div>
-      <h1 class="app-title">Durable MySQL Delayed Job Queue</h1>
-      <p class="app-subtitle">At-Least-Once Execution &bull; Atomic Lease Fencing &bull; Complete Attempt Audit</p>
+    <div class="title-wrap">
+      <div class="brand-row">
+        <h1>Durable Delayed Job Queue</h1>
+        <span class="badge-engine">MySQL 8.0 ACID</span>
+      </div>
+      <p class="subtitle">Distributed execution with atomic row locks, leases & idempotency fencing</p>
     </div>
   </div>
 
-  <div class="header-controls">
-    <div class="live-indicator" [class.live]="autoRefresh()">
-      <span class="pulse-dot"></span>
-      <span>{{ autoRefresh() ? 'Live Sync (2s)' : 'Sync Paused' }}</span>
-    </div>
-
-    <button class="btn btn-secondary" (click)="toggleAutoRefresh.emit()" title="Pause/Resume 2s background polling">
-      <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path *ngIf="autoRefresh()" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        <path *ngIf="!autoRefresh()" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
-        <path *ngIf="!autoRefresh()" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
-      {{ autoRefresh() ? 'Pause' : 'Resume' }}
+  <div class="header-actions">
+    <!-- Live Polling Toggle -->
+    <button
+      class="action-btn live-btn"
+      [class.active]="autoRefresh()"
+      (click)="toggleAutoRefresh.emit()"
+      title="Toggle real-time background sync"
+    >
+      <span class="live-dot" [class.pulsing]="autoRefresh()"></span>
+      {{ autoRefresh() ? 'Live (2s)' : 'Paused' }}
     </button>
 
-    <button class="btn btn-secondary" (click)="refresh.emit()" [disabled]="isLoading()" title="Manual refresh">
+    <!-- Manual Refresh -->
+    <button
+      class="action-btn"
+      (click)="refresh.emit()"
+      [disabled]="isLoading()"
+      title="Refresh state immediately"
+    >
       <svg class="btn-icon" [class.spin]="isLoading()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
       </svg>
       Refresh
     </button>
 
-    <button class="btn btn-danger" (click)="resetSeed.emit()" [disabled]="isResetting()" title="Wipe all jobs and re-seed from CSV for demo">
+    <!-- Reset & Re-Seed Button (Opens Custom Modal) -->
+    <button
+      class="action-btn btn-danger"
+      (click)="openResetModal()"
+      [disabled]="isResetting()"
+      title="Wipe database and re-seed 15 jobs for clean demo"
+    >
       <svg class="btn-icon" [class.spin]="isResetting()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
       </svg>
       {{ isResetting() ? 'Resetting...' : 'Reset & Re-Seed' }}
     </button>
   </div>
 </header>
+
+<!-- Custom Dark Theme Modal for Reset & Re-Seed Confirmation -->
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeResetModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-icon-danger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="modal-title">Reset & Re-Seed Queue?</h2>
+        <p class="modal-desc">This will clear all job attempts and reload the 15 seed jobs from CSV at base time = NOW().</p>
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-notice">
+        <strong>Demo Reset:</strong> All 15 jobs will restart in real-time ($t=0$). Worker 1 and Worker 2 will immediately begin concurrent drainage.
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="modal-btn-cancel" (click)="closeResetModal()">Cancel</button>
+      <button class="modal-btn-confirm" (click)="confirmReset()">Confirm & Re-Seed</button>
+    </div>
+  </div>
+</div>

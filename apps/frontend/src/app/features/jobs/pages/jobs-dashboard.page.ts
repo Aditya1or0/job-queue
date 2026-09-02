@@ -89,10 +89,11 @@ export class JobsDashboardPage implements OnInit, OnDestroy {
         this.lastUpdated.set(new Date());
         if (onDone) onDone();
 
-        // Refresh attempts for open rows silently
-        const expanded = this.expandedJobIds();
-        expanded.forEach((jobId) => {
-          this.fetchAttempts(jobId, true);
+        // Prefetch attempts silently for all jobs that have run at least once
+        res.jobs.forEach((job) => {
+          if (job.attemptCount > 0 || this.expandedJobIds().has(job.jobId)) {
+            this.fetchAttempts(job.jobId, true);
+          }
         });
       },
       error: (err) => {
@@ -166,20 +167,17 @@ export class JobsDashboardPage implements OnInit, OnDestroy {
   }
 
   public resetAndSeedQueue(): void {
-    if (!confirm('Are you sure you want to reset all jobs and re-seed the queue from CSV for the demo?')) {
-      return;
-    }
     this.isResetting.set(true);
     this.jobService.resetAndSeed().subscribe({
       next: () => {
         this.isResetting.set(false);
         this.expandedJobIds.set(new Set());
+        this.attemptsMap.set(new Map());
         this.manualRefresh();
       },
       error: (err) => {
         console.error('Failed to reset and seed queue:', err);
         this.isResetting.set(false);
-        alert('Reset error: ' + (err.error?.message || err.message));
       }
     });
   }

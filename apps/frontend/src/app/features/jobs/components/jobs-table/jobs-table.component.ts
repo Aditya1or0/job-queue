@@ -36,6 +36,14 @@ export class JobsTableComponent {
     return this.requeueingMap().has(jobId);
   }
 
+  public getLastWorker(jobId: string): string | null {
+    const attempts = this.attemptsMap().get(jobId);
+    if (attempts && attempts.length > 0) {
+      return attempts[attempts.length - 1].workerId;
+    }
+    return null;
+  }
+
   public formatTime(dateStr: string | Date | null): string {
     if (!dateStr) return '—';
     const d = new Date(dateStr);

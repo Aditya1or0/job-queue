@@ -1,0 +1,52 @@
+<section class="toolbar">
+  <div class="tab-group">
+    <button
+      class="tab-btn"
+      [class.active]="selectedFilter() === 'ALL'"
+      (click)="filterChange.emit('ALL')"
+    >
+      All <span class="badge">{{ totalJobs() }}</span>
+    </button>
+    <button
+      class="tab-btn"
+      [class.active]="selectedFilter() === 'READY'"
+      (click)="filterChange.emit('READY')"
+    >
+      Ready <span class="badge badge-ready">{{ counts().READY }}</span>
+    </button>
+    <button
+      class="tab-btn"
+      [class.active]="selectedFilter() === 'RUNNING'"
+      (click)="filterChange.emit('RUNNING')"
+    >
+      Running <span class="badge badge-running">{{ counts().RUNNING }}</span>
+    </button>
+    <button
+      class="tab-btn"
+      [class.active]="selectedFilter() === 'DONE'"
+      (click)="filterChange.emit('DONE')"
+    >
+      Done <span class="badge badge-done">{{ counts().DONE }}</span>
+    </button>
+    <button
+      class="tab-btn"
+      [class.active]="selectedFilter() === 'DEAD_LETTER'"
+      (click)="filterChange.emit('DEAD_LETTER')"
+    >
+      Dead-Letter <span class="badge badge-dead">{{ counts().DEAD_LETTER }}</span>
+    </button>
+  </div>
+
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search by Job ID or Payload..."
+      [ngModel]="searchQuery()"
+      (ngModelChange)="searchQueryChange.emit($event)"
+    />
+  </div>
+</section>

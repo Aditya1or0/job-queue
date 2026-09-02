@@ -112,13 +112,22 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #1c1c1c;
-  border: 1px solid #333333;
-  color: #a5b4fc;
   padding: 2px 7px;
   border-radius: 4px;
   font-size: 0.7rem;
   font-family: monospace;
+}
+
+.worker-tag.active-lease {
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  color: #fbbf24;
+}
+
+.worker-tag.past-worker {
+  background: #1c1c1c;
+  border: 1px solid #333333;
+  color: #a5b4fc;
 }
 
 .worker-icon {

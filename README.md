@@ -39,7 +39,7 @@ A high-reliability, fault-tolerant, lease-based distributed delayed job queue sy
 - **`apps/worker`**: Distributed worker daemon executing atomic claims, running opaque handlers asynchronously with zero database connections held, and committing outcomes with execution fencing tokens.
 - **`apps/producer`**: Ingestion service that parses `jobs_seed.csv` and idempotently enqueues jobs with calculated `run_after` timestamps.
 - **`apps/api`**: REST visibility service providing aggregated state counts, job lists, full execution attempt timelines, and dead-letter requeue endpoints.
-- **`apps/frontend`**: Single-page Angular application displaying live job states, KPI counters, and expandable execution attempt audits.
+- **`apps/web`**: Single-page Angular application displaying live job states, KPI counters, and expandable execution attempt audits.
 
 ---
 

@@ -8,7 +8,7 @@
         <th>Payload</th>
         <th>Run After / Scheduled</th>
         <th>Attempts</th>
-        <th>Lease Owner</th>
+        <th>Worker / Lease</th>
         <th style="text-align: right;">Action</th>
       </tr>
     </thead>
@@ -49,13 +49,25 @@
             </span>
           </td>
           <td>
-            <span *ngIf="job.leaseOwner" class="worker-tag">
+            <!-- Active Lease Owner -->
+            <span *ngIf="job.leaseOwner" class="worker-tag active-lease">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="worker-icon">
                 <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
               </svg>
               {{ job.leaseOwner }}
+              <span class="pulse-ring"></span>
             </span>
-            <span *ngIf="!job.leaseOwner" class="text-dim">&mdash;</span>
+
+            <!-- Last Executing Worker (for DONE / DEAD_LETTER) -->
+            <span *ngIf="!job.leaseOwner && getLastWorker(job.jobId)" class="worker-tag past-worker">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="worker-icon">
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
+              </svg>
+              {{ getLastWorker(job.jobId) }}
+            </span>
+
+            <!-- Unassigned (Pending Ready) -->
+            <span *ngIf="!job.leaseOwner && !getLastWorker(job.jobId)" class="text-dim">&mdash;</span>
           </td>
           <td style="text-align: right;" (click)="$event.stopPropagation()">
             <button

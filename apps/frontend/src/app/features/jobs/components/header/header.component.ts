@@ -16,4 +16,19 @@ export class HeaderComponent {
   public toggleAutoRefresh = output<void>();
   public refresh = output<void>();
   public resetSeed = output<void>();
+
+  public showModal = false;
+
+  public openResetModal(): void {
+    this.showModal = true;
+  }
+
+  public closeResetModal(): void {
+    this.showModal = false;
+  }
+
+  public confirmReset(): void {
+    this.showModal = false;
+    this.resetSeed.emit();
+  }
 }
