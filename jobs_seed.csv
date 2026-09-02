@@ -1,0 +1,16 @@
+job_id,payload,run_after_offset_sec,fail_times
+JOB-0001,Send welcome email,0,0
+JOB-0002,Email order confirmation,0,0
+JOB-0003,Charge customer card,0,1
+JOB-0004,Generate monthly invoice,0,2
+JOB-0005,Sync contact to CRM,0,9
+JOB-0006,Resize uploaded image,0,0
+JOB-0007,Send shipping notification,5,0
+JOB-0008,Rebuild search index,0,1
+JOB-0009,Send password reset email,0,0
+JOB-0010,Export report to spreadsheet,30,0
+JOB-0011,Send SMS appointment reminder,0,2
+JOB-0012,Recalculate loyalty points,0,9
+JOB-0013,Archive old records,60,0
+JOB-0014,Send weekly digest email,120,0
+JOB-0015,Refund cancelled order,0,0

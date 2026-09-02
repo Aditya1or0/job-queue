@@ -1,0 +1,100 @@
+.attempt-details-card {
+  padding: 12px 20px 16px;
+  border-left: 3px solid #6366f1;
+  background: #1a1a1a;
+}
+
+.attempt-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.attempt-card-header h3 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.attempt-count-text {
+  font-size: 0.75rem;
+  color: #888888;
+}
+
+.attempts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+  background: #222222;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #333333;
+}
+
+.attempts-table th {
+  background: #161616;
+  padding: 6px 10px;
+  color: #94a3b8;
+  text-align: left;
+  font-weight: 600;
+}
+
+.attempts-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #2a2a2a;
+  vertical-align: middle;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.pill-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+.status-succeeded { background: rgba(52, 211, 153, 0.12); color: #34d399; }
+.status-succeeded .pill-dot { background: #34d399; }
+
+.status-failed { background: rgba(248, 113, 113, 0.12); color: #f87171; }
+.status-failed .pill-dot { background: #f87171; }
+
+.status-timed_out { background: rgba(251, 146, 60, 0.12); color: #fb923c; }
+.status-timed_out .pill-dot { background: #fb923c; }
+
+.status-running { background: rgba(251, 191, 36, 0.12); color: #fbbf24; }
+.status-running .pill-dot { background: #fbbf24; }
+
+.error-col {
+  max-width: 300px;
+}
+
+.error-snippet {
+  color: #fca5a5;
+  font-family: monospace;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.font-mono { font-family: monospace; }
+.font-bold { font-weight: 600; }
+.text-dim { color: #666666; }
+
+.loading-state, .empty-attempts {
+  padding: 16px;
+  text-align: center;
+  color: #888888;
+  font-size: 0.8rem;
+}

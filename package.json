@@ -1,0 +1,39 @@
+{
+  "name": "delayed-job-queue",
+  "version": "1.0.0",
+  "description": "Production-grade, durable, lease-based MySQL job queue with at-least-once semantics",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start:api": "tsx apps/api/src/main.ts",
+    "start:worker": "tsx apps/worker/src/main.ts",
+    "start:producer": "tsx apps/producer/src/main.ts",
+    "test": "jest --runInBand",
+    "test:acceptance": "jest --testPathPattern=tests/acceptance --runInBand",
+    "test:unit": "jest --testPathPattern=tests/unit --runInBand",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "csv-parse": "^5.6.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mysql2": "^3.12.0",
+    "sequelize": "^6.37.5",
+    "tsx": "^4.19.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "Antigravity Engineering",
+  "license": "MIT"
+}

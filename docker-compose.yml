@@ -1,0 +1,112 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: job_queue_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: job_queue_db
+      MYSQL_USER: queue_user
+      MYSQL_PASSWORD: queue_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      interval: 3s
+      timeout: 5s
+      retries: 15
+      start_period: 10s
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    container_name: job_queue_api
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: job_queue_db
+      DB_USER: queue_user
+      DB_PASSWORD: queue_password
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker-1:
+    build:
+      context: .
+      dockerfile: docker/worker.Dockerfile
+    container_name: job_queue_worker_1
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: job_queue_db
+      DB_USER: queue_user
+      DB_PASSWORD: queue_password
+      WORKER_ID: worker-1
+      LEASE_DURATION_MS: 30000
+      POLL_INTERVAL_MS: 500
+      MAX_POLL_INTERVAL_MS: 3000
+      MAX_ATTEMPTS: 3
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker-2:
+    build:
+      context: .
+      dockerfile: docker/worker.Dockerfile
+    container_name: job_queue_worker_2
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: job_queue_db
+      DB_USER: queue_user
+      DB_PASSWORD: queue_password
+      WORKER_ID: worker-2
+      LEASE_DURATION_MS: 30000
+      POLL_INTERVAL_MS: 500
+      MAX_POLL_INTERVAL_MS: 3000
+      MAX_ATTEMPTS: 3
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  producer:
+    build:
+      context: .
+      dockerfile: docker/producer.Dockerfile
+    container_name: job_queue_producer
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: job_queue_db
+      DB_USER: queue_user
+      DB_PASSWORD: queue_password
+      SEED_FILE_PATH: /app/jobs_seed.csv
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: job_queue_web
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
